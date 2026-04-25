@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+GREEN=$'\033[0;32m'
+BLUE=$'\033[0;34m'
+NC=$'\033[0m'
+
+OPTS=(none minimal size speed aggressive)
+
+BUILDS=(
+    pipeline
+)
+
+TESTS=(
+    tests/unit/pipeline
+)
+
+DOCS=(
+    pipeline
+)
+
+echo "${BLUE}Starting flat local CI...${NC}"
+
+COLLECTIONS="-collection:matryoshka=$(pwd)/deps/matryoshka "
+
+if ! command -v odin >/dev/null 2>&1; then
+    echo "Error: odin compiler not found in PATH"
+    exit 1
+fi
+
+export ODIN_TEST_THREADS=1
+
+for opt in "${OPTS[@]}"; do
+    echo
+    echo "${BLUE}--- opt: ${opt} ---${NC}"
+
+    for path in "${BUILDS[@]}"; do
+        if [ -d "./${path}" ] && [ -n "$(find ./${path} -maxdepth 1 -name '*.odin' -size +0c 2>/dev/null | head -1)" ]; then
+            echo "  build ${path}..."
+            if [ "${opt}" = "none" ]; then
+                odin build ./${path}/ -build-mode:lib -vet -strict-style -o:none -debug $COLLECTIONS
+            else
+                odin build ./${path}/ -build-mode:lib -vet -strict-style -o:"${opt}" $COLLECTIONS
+            fi
+        fi
+    done
+
+    for path in "${TESTS[@]}"; do
+        if [ -d "./${path}" ] && [ -n "$(find ./${path} -name '*.odin' -size +0c 2>/dev/null | head -1)" ]; then
+            echo "  test ${path}/..."
+            if [ "${opt}" = "none" ]; then
+                odin test ./${path}/ -vet -strict-style -disallow-do -o:none -debug -define:ODIN_TEST_FANCY=false $COLLECTIONS
+            else
+                odin test ./${path}/ -vet -strict-style -disallow-do -o:"${opt}" -define:ODIN_TEST_FANCY=false -define:ODIN_TEST_THREADS=1 $COLLECTIONS
+            fi
+        fi
+    done
+
+    echo "${GREEN}  pass: ${opt}${NC}"
+done
+
+echo
+echo "${BLUE}--- doc smoke test ---${NC}"
+for path in "${DOCS[@]}"; do
+    if [ -d "./${path}" ] && [ -n "$(find ./${path} -maxdepth 1 -name '*.odin' -size +0c 2>/dev/null | head -1)" ]; then
+        odin doc ./${path}/ $COLLECTIONS
+    fi
+done
+echo "${GREEN}  docs OK${NC}"
+
+echo
+echo "${GREEN}ALL CHECKS PASSED${NC}"

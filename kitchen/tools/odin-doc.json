@@ -1,0 +1,20 @@
+{
+    "hide_core": true,
+    "hide_base": true,
+    "collections": {
+        "otofu": {
+            "name": "otofu",
+            "source_url": "https://github.com/g41797/otofu/blob/main",
+            "base_url": "/otofu",
+            "root_path": "PROJECT_ROOT",
+            "license": {
+                "text": "MIT",
+                "url": "https://github.com/g41797/otofu/tree/main/LICENSE"
+            },
+            "home": {
+                "title": "otofu",
+                "embed_readme": "PROJECT_ROOT/kitchen/docs/api_readme.md"
+            }
+        }
+    }
+}

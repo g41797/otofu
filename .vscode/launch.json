@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug Odin",
+            "program": "${workspaceFolder}/${workspaceFolderBasename}",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build Odin",
+            "terminal": "integrated",
+            "initCommands": [
+                "command script import ${workspaceFolder}/.vscode/odin_lldb.py"
+            ]
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug Tests",
+            "program": "${workspaceFolder}/debug_current",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build Tests",
+            "terminal": "integrated",
+            "initCommands": [
+                "command script import ${workspaceFolder}/.vscode/odin_lldb.py"
+            ]
+        }
+    ]
+}
