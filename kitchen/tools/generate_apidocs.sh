@@ -17,6 +17,7 @@ mkdir -p "$APIDOCS_DIR"
 
 # Packages to document. Edit this list when adding or removing packages.
 DOCS=(
+    .
     pipeline
 )
 
@@ -150,7 +151,7 @@ done
 
 # Fix blank root package nav link
 find . -name "index.html" -exec sed -i \
-    's|<a \([^>]*\)href="\([^"]*\)otofu/"\([^>]*\)></a>|<a \1href="\2matryoshka-http-template/"\3>otofu</a>|g' {} +
+    's|<a \([^>]*\)href="\([^"]*\)otofu/"\([^>]*\)></a>|<a \1href="\2otofu/"\3>otofu</a>|g' {} +
 
 # pkg-data.js contains absolute paths used by search.js for navigation
 sed -i 's|"path": "/|"path": "/apidocs/|g' "$APIDOCS_DIR/pkg-data.js"
