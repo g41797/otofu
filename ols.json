@@ -1,0 +1,11 @@
+{
+    "enable_document_symbols": true,
+    "enable_hover": true,
+    "enable_snippets": true,
+    "collections": [
+        {
+            "name": "matryoshka",
+            "path": "./deps/matryoshka"
+        }
+    ]
+}
